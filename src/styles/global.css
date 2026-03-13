@@ -6,6 +6,10 @@
 	--gray-dark: 34, 41, 57;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 :root.dark {
 	--bg: #111;
 	--text: #eee;

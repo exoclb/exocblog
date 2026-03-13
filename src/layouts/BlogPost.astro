@@ -16,6 +16,19 @@ const currentUrl = Astro.url;
 	<head>
 		<BaseHead title={title} description={description} />
 		<script is:inline>
+			// Smooth scroll for TOC links
+			document.addEventListener('click', (e) => {
+				if (e.target.matches('.toc a')) {
+					e.preventDefault();
+					const targetId = e.target.getAttribute('href').substring(1);
+					const target = document.getElementById(targetId);
+					if (target) {
+						target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						history.pushState(null, null, '#' + targetId);
+					}
+				}
+			});
+
 			// Table of Contents
 			document.addEventListener('DOMContentLoaded', () => {
 				const headings = document.querySelectorAll('.prose h2, .prose h3');
@@ -28,10 +41,29 @@ const currentUrl = Astro.url;
 							heading.id = id;
 							const li = document.createElement('li');
 							li.className = heading.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
-							li.innerHTML = `<a href="#${id}">${heading.textContent}</a>`;
-							toc.appendChild(li);
+							li.innerHTML = `<a href="#${id}" data-target="${id}">${heading.textContent}</a>`;
+							toc.querySelector('ul').appendChild(li);
 						});
 					}
+
+					// Active section highlighting
+					const observer = new IntersectionObserver(
+						(entries) => {
+							entries.forEach((entry) => {
+								if (entry.isIntersecting) {
+									document.querySelectorAll('.toc a').forEach((a) => {
+										a.classList.remove('active');
+										if (a.getAttribute('data-target') === entry.target.id) {
+											a.classList.add('active');
+										}
+									});
+								}
+							});
+						},
+						{ rootMargin: '-80px 0px -80% 0px' }
+					);
+
+					headings.forEach((heading) => observer.observe(heading));
 				}
 			});
 		</script>
@@ -91,44 +123,143 @@ const currentUrl = Astro.url;
 			}
 			.toc {
 				display: none;
-				background: #f9f9f9;
-				padding: 1rem;
-				border-radius: 8px;
+				background: #fafafa;
+				padding: 1.25rem;
+				border-radius: 12px;
 				margin-bottom: 2rem;
-				border-left: 3px solid #333;
+				border: 1px solid #eee;
 			}
 			:global(.dark) .toc {
 				background: #1a1a1a;
-				border-left-color: #666;
+				border-color: #333;
+			}
+			.toc-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				cursor: pointer;
+				user-select: none;
 			}
 			.toc h3 {
-				margin: 0 0 0.5rem 0;
+				margin: 0;
+				font-size: 0.85rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				color: #666;
+			}
+			:global(.dark) .toc h3 {
+				color: #aaa;
+			}
+			.toc-toggle {
+				display: none;
+				background: none;
+				border: none;
+				cursor: pointer;
+				color: #666;
 				font-size: 1rem;
+				padding: 0.25rem;
 			}
 			.toc ul {
 				list-style: none;
 				padding: 0;
 				margin: 0;
+				max-height: 0;
+				overflow: hidden;
+				transition: max-height 0.3s ease, margin 0.3s ease;
+			}
+			.toc.expanded ul {
+				max-height: 500px;
+				margin-top: 1rem;
+			}
+			.toc-toggle-icon {
+				transition: transform 0.3s ease;
+			}
+			.toc.expanded .toc-toggle-icon {
+				transform: rotate(180deg);
 			}
 			.toc li {
-				padding: 0.25rem 0;
+				padding: 0;
 			}
 			.toc-h3 {
 				padding-left: 1rem;
 			}
 			.toc a {
+				display: block;
 				text-decoration: none;
-				color: #555;
+				color: #666;
 				font-size: 0.9rem;
+				padding: 0.4rem 0;
+				border-left: 2px solid transparent;
+				padding-left: 0.75rem;
+				margin-left: -0.75rem;
+				transition: all 0.2s ease;
 			}
 			.toc a:hover {
-				color: #000;
+				color: #333;
+				border-left-color: #ccc;
 			}
 			:global(.dark) .toc a {
-				color: #aaa;
+				color: #999;
 			}
 			:global(.dark) .toc a:hover {
 				color: #fff;
+				border-left-color: #555;
+			}
+			.toc a.active {
+				color: #333;
+				border-left-color: #333;
+				font-weight: 500;
+			}
+			:global(.dark) .toc a.active {
+				color: #fff;
+				border-left-color: #fff;
+			}
+
+			/* Desktop: TOC sidebar */
+			@media (min-width: 1100px) {
+				.article-container {
+					display: grid;
+					grid-template-columns: 1fr 220px;
+					gap: 3rem;
+					max-width: 1000px;
+					margin: 0 auto;
+					padding: 2rem 1rem;
+				}
+				.article-content {
+					min-width: 0;
+				}
+				.toc {
+					position: sticky;
+					top: 100px;
+					display: block !important;
+					background: transparent;
+					border: none;
+					padding: 0;
+					margin: 0;
+					height: fit-content;
+				}
+				.toc ul {
+					max-height: none;
+					overflow: visible;
+					margin-top: 0.75rem;
+				}
+				.toc-header {
+					display: none;
+				}
+				.toc-toggle {
+					display: none;
+				}
+			}
+
+			/* Mobile: collapsible */
+			@media (max-width: 1099px) {
+				.toc-header {
+					display: flex;
+				}
+				.toc-toggle {
+					display: block;
+				}
 			}
 			.share-buttons {
 				display: flex;
@@ -202,7 +333,12 @@ const currentUrl = Astro.url;
 					</div>
 					
 					<div class="toc" id="toc">
-						<h3>Table of Contents</h3>
+						<div class="toc-header" onclick="document.getElementById('toc').classList.toggle('expanded')">
+							<h3>Table of Contents</h3>
+							<button class="toc-toggle" type="button">
+								<span class="toc-toggle-icon">▼</span>
+							</button>
+						</div>
 						<ul></ul>
 					</div>
 
