@@ -36,22 +36,45 @@ const currentUrl = Astro.url;
 				}
 			});
 
+		<script is:inline>
 			// Table of Contents
 			document.addEventListener('DOMContentLoaded', () => {
-				const headings = document.querySelectorAll('.prose h2, .prose h3');
-				if (headings.length > 0) {
-					const toc = document.getElementById('toc');
-					if (toc) {
-						toc.classList.add('expanded');
-						headings.forEach((heading) => {
-							const id = heading.textContent?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || '';
-							heading.id = id;
-							const li = document.createElement('li');
-							li.className = heading.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
-							li.innerHTML = `<a href="#${id}" data-target="${id}">${heading.textContent}</a>`;
-							toc.querySelector('ul').appendChild(li);
-						});
+				const prose = document.querySelector('.prose');
+				if (!prose) return;
+				
+				const headings = prose.querySelectorAll('h2, h3');
+				const toc = document.getElementById('toc');
+				const tocList = toc?.querySelector('ul');
+				
+				if (!tocList || headings.length === 0) {
+					if (toc) toc.style.display = 'none';
+					return;
+				}
+				
+				toc.classList.add('expanded');
+				const usedIds = new Set();
+				
+				headings.forEach((heading, index) => {
+					const text = heading.textContent?.trim() || '';
+					if (!text) return;
+					
+					let id = text.toLowerCase()
+						.replace(/[^a-z0-9\s-]/g, '')
+						.replace(/\s+/g, '-')
+						.replace(/-+/g, '-')
+						.trim();
+					
+					if (!id || usedIds.has(id)) {
+						id = id ? `${id}-${index}` : `section-${index}`;
 					}
+					usedIds.add(id);
+					
+					heading.id = id;
+					const li = document.createElement('li');
+					li.className = heading.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
+					li.innerHTML = `<a href="#${id}" data-target="${id}">${text}</a>`;
+					tocList.appendChild(li);
+				});
 
 					// Active section highlighting
 					const observer = new IntersectionObserver(
