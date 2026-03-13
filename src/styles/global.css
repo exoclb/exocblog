@@ -11,13 +11,13 @@ html {
 }
 
 :root.dark {
-	--bg: #111;
-	--text: #eee;
-	--text-muted: #aaa;
-	--link: #eee;
-	--link-hover: #fff;
-	--border: #333;
-	--code-bg: #222;
+	--bg: #0d1117;
+	--text: #c9d1d9;
+	--text-muted: #8b949e;
+	--link: #58a6ff;
+	--link-hover: #79c0ff;
+	--border: #30363d;
+	--code-bg: #161b22;
 }
 
 body {
@@ -32,8 +32,8 @@ body {
 }
 
 .dark body {
-	background: #111;
-	color: #eee;
+	background: #0d1117;
+	color: #c9d1d9;
 }
 main {
 	width: 720px;
@@ -54,6 +54,9 @@ a {
 	text-decoration-color: #999;
 	text-underline-offset: 3px;
 }
+.dark a {
+	text-decoration-color: #484f58;
+}
 a:hover {
 	color: var(--text, #000);
 	text-decoration-color: var(--text, #333);
@@ -70,14 +73,15 @@ code {
 	font-size: 0.9em;
 }
 .dark code {
-	background: #222;
-	color: #eee;
+	background: #161b22;
+	color: #c9d1d9;
 }
 pre {
 	padding: 1em;
-	background: #1a1a1a;
+	background: #161b22;
 	border-radius: 8px;
 	overflow-x: auto;
+	border: 1px solid #30363d;
 }
 pre code {
 	background: none;
