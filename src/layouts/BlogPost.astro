@@ -16,8 +16,9 @@ const currentUrl = Astro.url;
 	<head>
 		<BaseHead title={title} description={description} />
 		<script is:inline>
-			// Smooth scroll for TOC links
+			// Toggle TOC on mobile
 			document.addEventListener('click', (e) => {
+				// TOC links - smooth scroll
 				if (e.target.matches('.toc a')) {
 					e.preventDefault();
 					const targetId = e.target.getAttribute('href').substring(1);
@@ -27,7 +28,7 @@ const currentUrl = Astro.url;
 						history.pushState(null, null, '#' + targetId);
 					}
 				}
-				// Toggle TOC on mobile
+				// Toggle button
 				if (e.target.matches('.toc-toggle') || e.target.closest('.toc-toggle')) {
 					const toc = document.getElementById('toc');
 					if (toc) {
@@ -36,8 +37,7 @@ const currentUrl = Astro.url;
 				}
 			});
 
-		<script is:inline>
-			// Table of Contents
+			// Table of Contents - auto generate from headings
 			document.addEventListener('DOMContentLoaded', () => {
 				const prose = document.querySelector('.prose');
 				if (!prose) return;
