@@ -1,0 +1,210 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Search | ExocBlog" description="Search posts" />
+		<script>
+			let allPosts = [];
+
+			async function loadPosts() {
+				const response = await fetch('/search.json');
+				allPosts = await response.json();
+			}
+
+			function searchPosts(query) {
+				if (!query) return [];
+				const q = query.toLowerCase();
+				return allPosts.filter(post => {
+					const searchText = (post.title + ' ' + post.description + ' ' + (post.tags || []).join(' ')).toLowerCase();
+					return searchText.includes(q);
+				});
+			}
+
+			function renderResults(results) {
+				const container = document.getElementById('results');
+				if (!container) return;
+				
+				if (results.length === 0) {
+					container.innerHTML = '<li><p>No results found.</p></li>';
+					return;
+				}
+
+				container.innerHTML = results.map(post => `
+					<li>
+						<a href="/blog/${post.slug}/">
+							<h3 class="title">${post.title}</h3>
+							<p class="date">${new Date(post.pubDate).toLocaleDateString()}</p>
+							<p class="description">${post.description}</p>
+						</a>
+					</li>
+				`).join('');
+			}
+
+			document.addEventListener('DOMContentLoaded', async () => {
+				await loadPosts();
+				
+				const searchInput = document.getElementById('search-input');
+				if (!searchInput) return;
+
+				const urlParams = new URLSearchParams(window.location.search);
+				const query = urlParams.get('q');
+				if (query) {
+					searchInput.value = query;
+					const results = searchPosts(query);
+					renderResults(results);
+				}
+
+				searchInput.addEventListener('input', (e) => {
+					const query = e.target.value;
+					const results = searchPosts(query);
+					renderResults(results);
+				});
+			});
+		</script>
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 2em 1em;
+			}
+			.search-box {
+				margin-bottom: 2rem;
+			}
+			#search-input {
+				width: 100%;
+				padding: 0.75rem 1rem;
+				font-size: 1rem;
+				border: 2px solid #eee;
+				border-radius: 8px;
+				background: transparent;
+				color: inherit;
+			}
+			#search-input:focus {
+				outline: none;
+				border-color: #333;
+			}
+			:global(.dark) #search-input {
+				border-color: #333;
+				background: #1a1a1a;
+				color: #eee;
+			}
+			ul {
+				list-style: none;
+				padding: 0;
+			}
+			li {
+				padding: 1rem 0;
+				border-bottom: 1px solid #eee;
+			}
+			li:last-child {
+				border-bottom: none;
+			}
+			a {
+				text-decoration: none;
+			}
+			.title {
+				color: #333;
+				margin: 0 0 0.25rem 0;
+			}
+			:global(.dark) .title {
+				color: #eee;
+			}
+			a:hover .title {
+				color: #000;
+			}
+			.date {
+				color: #888;
+				font-size: 0.85rem;
+				margin: 0;
+			}
+			.description {
+				color: #666;
+				margin: 0.25rem 0 0 0;
+				font-size: 0.95rem;
+			}
+			.tags-section {
+				margin-top: 2rem;
+			}
+			.tags-section h2 {
+				font-size: 1.25rem;
+				margin-bottom: 1rem;
+			}
+			.all-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			.tag {
+				background: #eee;
+				padding: 0.5rem 1rem;
+				border-radius: 999px;
+				font-size: 0.9rem;
+				color: #555;
+				text-decoration: none;
+			}
+			:global(.dark) .tag {
+				background: #333;
+				color: #aaa;
+			}
+			.tag:hover {
+				background: #333;
+				color: #fff;
+			}
+			:global(.dark) .tag:hover {
+				background: #555;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Search</h1>
+			<div class="search-box">
+				<input type="text" id="search-input" placeholder="Search posts..." />
+			</div>
+
+			<div id="results-container">
+				<ul id="results">
+					{posts.slice(0, 5).map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`}>
+								<h3 class="title">{post.data.title}</h3>
+								<p class="date">
+									<FormattedDate date={post.data.pubDate} />
+								</p>
+								<p class="description">{post.data.description}</p>
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			{allTags.length > 0 && (
+				<div class="tags-section">
+					<h2>Browse by Tags</h2>
+					<div class="all-tags">
+						{allTags.map((tag) => (
+							<a href={`/tags/${tag}`} class="tag">#{tag}</a>
+						))}
+					</div>
+				</div>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>

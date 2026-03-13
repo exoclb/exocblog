@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import { type CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -8,12 +7,34 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [] } = Astro.props;
+
+const currentUrl = Astro.url;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
+		<script is:inline>
+			// Table of Contents
+			document.addEventListener('DOMContentLoaded', () => {
+				const headings = document.querySelectorAll('.prose h2, .prose h3');
+				if (headings.length > 0) {
+					const toc = document.getElementById('toc');
+					if (toc) {
+						toc.style.display = 'block';
+						headings.forEach((heading) => {
+							const id = heading.textContent?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || '';
+							heading.id = id;
+							const li = document.createElement('li');
+							li.className = heading.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
+							li.innerHTML = `<a href="#${id}">${heading.textContent}</a>`;
+							toc.appendChild(li);
+						});
+					}
+				}
+			});
+		</script>
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -27,30 +48,124 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				display: block;
 				margin: 0 auto;
 				border-radius: 12px;
-				box-shadow: var(--box-shadow);
 			}
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
 			}
 			.title {
 				margin-bottom: 1em;
 				padding: 1em 0;
 				text-align: center;
-				line-height: 1;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
 			}
 			.date {
 				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				color: #888;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			.tags {
+				display: flex;
+				justify-content: center;
+				gap: 0.5rem;
+				margin-top: 0.5rem;
+				flex-wrap: wrap;
+			}
+			.tag {
+				background: #eee;
+				padding: 0.25rem 0.75rem;
+				border-radius: 999px;
+				font-size: 0.8rem;
+				color: #555;
+				text-decoration: none;
+			}
+			:global(.dark) .tag {
+				background: #333;
+				color: #aaa;
+			}
+			.toc {
+				display: none;
+				background: #f9f9f9;
+				padding: 1rem;
+				border-radius: 8px;
+				margin-bottom: 2rem;
+				border-left: 3px solid #333;
+			}
+			:global(.dark) .toc {
+				background: #1a1a1a;
+				border-left-color: #666;
+			}
+			.toc h3 {
+				margin: 0 0 0.5rem 0;
+				font-size: 1rem;
+			}
+			.toc ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.toc li {
+				padding: 0.25rem 0;
+			}
+			.toc-h3 {
+				padding-left: 1rem;
+			}
+			.toc a {
+				text-decoration: none;
+				color: #555;
+				font-size: 0.9rem;
+			}
+			.toc a:hover {
+				color: #000;
+			}
+			:global(.dark) .toc a {
+				color: #aaa;
+			}
+			:global(.dark) .toc a:hover {
+				color: #fff;
+			}
+			.share-buttons {
+				display: flex;
+				justify-content: center;
+				gap: 1rem;
+				margin: 2rem 0;
+				padding: 1rem 0;
+				border-top: 1px solid #eee;
+				border-bottom: 1px solid #eee;
+			}
+			:global(.dark) .share-buttons {
+				border-color: #333;
+			}
+			.share-btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 0.5rem 1rem;
+				background: #333;
+				color: #fff;
+				text-decoration: none;
+				border-radius: 6px;
+				font-size: 0.9rem;
+			}
+			.share-btn:hover {
+				opacity: 0.9;
+			}
+			.share-btn.twitter { background: #1da1f2; }
+			.share-btn.facebook { background: #4267b2; }
+			.share-btn.linkedin { background: #0077b5; }
+			.comments {
+				margin-top: 3rem;
+				padding-top: 2rem;
+				border-top: 1px solid #eee;
+			}
+			:global(.dark) .comments {
+				border-color: #333;
 			}
 		</style>
 	</head>
@@ -59,9 +174,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
+				{heroImage && (
+					<div class="hero-image">
+						<img src={heroImage} alt="" />
+					</div>
+				)}
 				<div class="prose">
 					<div class="title">
 						<div class="date">
@@ -75,9 +192,51 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							}
 						</div>
 						<h1>{title}</h1>
-						<hr />
+						{tags.length > 0 && (
+							<div class="tags">
+								{tags.map((tag) => (
+									<span class="tag">#{tag}</span>
+								))}
+							</div>
+						)}
 					</div>
+					
+					<div class="toc" id="toc">
+						<h3>Table of Contents</h3>
+						<ul></ul>
+					</div>
+
 					<slot />
+
+					<div class="share-buttons">
+						<a href={`https://twitter.com/intent/tweet?text=${title}&url=${currentUrl}`} target="_blank" class="share-btn twitter">
+							Share on Twitter
+						</a>
+						<a href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`} target="_blank" class="share-btn facebook">
+							Share on Facebook
+						</a>
+						<a href={`https://www.linkedin.com/shareArticle?mini=true&url=${currentUrl}&title=${title}`} target="_blank" class="share-btn linkedin">
+							Share on LinkedIn
+						</a>
+					</div>
+
+					<div class="comments">
+						<script src="https://giscus.app/client.js"
+							data-repo="exoclb/exocblog"
+							data-repo-id="R_kgDO..."
+							data-category="Comments"
+							data-category-id="DIC_kwDO..."
+							data-mapping="pathname"
+							data-strict="0"
+							data-reactions-enabled="1"
+							data-emit-metadata="0"
+							data-input-position="bottom"
+							data-theme="preferred_color_scheme"
+							data-lang="en"
+							crossorigin="anonymous"
+							async>
+						</script>
+					</div>
 				</div>
 			</article>
 		</main>

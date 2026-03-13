@@ -51,6 +51,22 @@ const posts = (await getCollection('blog')).sort(
 				margin: 0.25rem 0 0 0;
 				font-size: 0.95rem;
 			}
+			.tags {
+				display: flex;
+				gap: 0.5rem;
+				margin-top: 0.5rem;
+			}
+			.tag {
+				background: #eee;
+				padding: 0.15rem 0.5rem;
+				border-radius: 999px;
+				font-size: 0.75rem;
+				color: #555;
+			}
+			:global(.dark) .tag {
+				background: #333;
+				color: #aaa;
+			}
 		</style>
 	</head>
 	<body>
@@ -68,6 +84,13 @@ const posts = (await getCollection('blog')).sort(
 									<FormattedDate date={post.data.pubDate} />
 								</p>
 								<p class="description">{post.data.description}</p>
+								{post.data.tags && post.data.tags.length > 0 && (
+									<div class="tags">
+										{post.data.tags.map((tag) => (
+											<span class="tag">#{tag}</span>
+										))}
+									</div>
+								)}
 							</a>
 						</li>
 					))
