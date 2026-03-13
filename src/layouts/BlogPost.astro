@@ -76,25 +76,24 @@ const currentUrl = Astro.url;
 					tocList.appendChild(li);
 				});
 
-					// Active section highlighting
-					const observer = new IntersectionObserver(
-						(entries) => {
-							entries.forEach((entry) => {
-								if (entry.isIntersecting) {
-									document.querySelectorAll('.toc a').forEach((a) => {
-										a.classList.remove('active');
-										if (a.getAttribute('data-target') === entry.target.id) {
-											a.classList.add('active');
-										}
-									});
-								}
-							});
-						},
-						{ rootMargin: '-80px 0px -80% 0px' }
-					);
+				// Active section highlighting
+				const observer = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								document.querySelectorAll('.toc a').forEach((a) => {
+									a.classList.remove('active');
+									if (a.getAttribute('data-target') === entry.target.id) {
+										a.classList.add('active');
+									}
+								});
+							}
+						});
+					},
+					{ rootMargin: '-80px 0px -80% 0px' }
+				);
 
-					headings.forEach((heading) => observer.observe(heading));
-				}
+				headings.forEach((heading) => observer.observe(heading));
 			});
 		</script>
 		<style>
