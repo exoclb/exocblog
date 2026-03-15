@@ -1,3 +1,10 @@
+---
+title: "From Mac Obsession to the Linux Rabbit Hole: A Journey I Never Planned"
+description: "How wanting my Windows to look like a Mac led me down the Linux rabbit hole"
+pubDate: "2025-01-15"
+tags: ["linux", "journey", "open-source"]
+---
+
 # From Mac Obsession to the Linux Rabbit Hole: A Journey I Never Planned
 
 *"I couldn't afford a MacBook. But who said I couldn't experience it?"*
