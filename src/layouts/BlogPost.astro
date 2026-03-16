@@ -196,8 +196,9 @@ const currentUrl = Astro.url;
 				transition: max-height 0.3s ease, margin 0.3s ease;
 			}
 			.toc.expanded ul {
-				max-height: 500px;
+				max-height: 800px;
 				margin-top: 1rem;
+				overflow-y: auto;
 			}
 			.toc-toggle-icon {
 				transition: transform 0.3s ease;
