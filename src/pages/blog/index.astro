@@ -17,6 +17,31 @@ const posts = (await getCollection('blog')).sort(
 			main {
 				width: 720px;
 			}
+			.search-container {
+				margin-bottom: 1.5rem;
+			}
+			.search-input {
+				width: 100%;
+				padding: 0.75rem 1rem;
+				font-size: 1rem;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				background: #fff;
+				color: #333;
+				transition: border-color 0.2s;
+			}
+			.search-input:focus {
+				outline: none;
+				border-color: #666;
+			}
+			:global(.dark) .search-input {
+				background: #161b22;
+				border-color: #30363d;
+				color: #c9d1d9;
+			}
+			:global(.dark) .search-input:focus {
+				border-color: #8b949e;
+			}
 			ul {
 				list-style: none;
 				padding: 0;
@@ -74,7 +99,10 @@ const posts = (await getCollection('blog')).sort(
 		<main>
 			<h1>Blog</h1>
 			<p>Writing about my learning journey.</p>
-			<ul>
+			<div class="search-container">
+				<input type="text" id="blog-search" class="search-input" placeholder="Search posts..." />
+			</div>
+			<ul id="posts-list">
 				{
 					posts.map((post) => (
 						<li>
@@ -96,7 +124,31 @@ const posts = (await getCollection('blog')).sort(
 					))
 				}
 			</ul>
+			<p id="no-results" style="display: none;">No posts found.</p>
 		</main>
 		<Footer />
+		<script>
+			const searchInput = document.getElementById('blog-search');
+			const postsList = document.getElementById('posts-list');
+			const noResults = document.getElementById('no-results');
+			const posts = postsList.querySelectorAll('li');
+
+			searchInput.addEventListener('input', (e) => {
+				const query = e.target.value.toLowerCase();
+				let visibleCount = 0;
+
+				posts.forEach(post => {
+					const text = post.textContent.toLowerCase();
+					if (text.includes(query)) {
+						(post as HTMLElement).style.display = '';
+						visibleCount++;
+					} else {
+						(post as HTMLElement).style.display = 'none';
+					}
+				});
+
+				noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+			});
+		</script>
 	</body>
 </html>
