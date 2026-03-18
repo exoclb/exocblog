@@ -1,9 +1,15 @@
 :root {
-	--accent: #333;
+	--accent: #7c6af7;
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
+	--text-primary: #111;
+	--text-secondary: #555;
+	--text-muted: #888;
+	--surface: #fafafa;
+	--border: #e5e5e5;
+	--accent-subtle: #f3f0ff;
 }
 
 html {
@@ -12,12 +18,15 @@ html {
 
 :root.dark {
 	--bg: #121418;
-	--text: #e4e4e7;
-	--text-muted: #a1a1aa;
+	--text: #f2f0e8;
+	--text-muted: #777672;
+	--text-secondary: #c0bdb5;
 	--link: #7dd3fc;
 	--link-hover: #a5f3fc;
-	--border: #3f3f46;
+	--border: #2e2e2e;
 	--code-bg: #1c1c22;
+	--surface: #1a1a1a;
+	--accent-subtle: #1e1a3a;
 }
 
 body {
@@ -33,7 +42,7 @@ body {
 
 .dark body {
 	background: #121418;
-	color: #e4e4e7;
+	color: #f2f0e8;
 	font-weight: 450;
 	letter-spacing: 0.01em;
 }
