@@ -144,10 +144,14 @@ const currentUrl = Astro.url;
 				font-size: 0.8rem;
 				color: #555;
 				text-decoration: none;
+				font-weight: 450;
 			}
 			:global(.dark) .tag {
-				background: #333;
-				color: #aaa;
+				background: #27272a;
+				color: #d4d4d8;
+			}
+			:global(.dark) .tag:hover {
+				background: #3f3f46;
 			}
 			.toc {
 				background: #fafafa;
@@ -157,8 +161,19 @@ const currentUrl = Astro.url;
 				border: 1px solid #eee;
 			}
 			:global(.dark) .toc {
-				background: #1a1a1a;
-				border-color: #333;
+				background: #1c1c22;
+				border-color: #3f3f46;
+			}
+			:global(.dark) .toc h3 {
+				color: #d4d4d8;
+			}
+			:global(.dark) .toc-toggle {
+				color: #a1a1aa;
+			}
+			:global(.dark) .toc-toggle:focus-visible {
+				outline: 2px solid #7dd3fc;
+				outline-offset: 2px;
+				border-radius: 2px;
 			}
 			.toc-header {
 				display: flex;
@@ -227,11 +242,16 @@ const currentUrl = Astro.url;
 				border-left-color: #ccc;
 			}
 			:global(.dark) .toc a {
-				color: #999;
+				color: #a1a1aa;
+				letter-spacing: 0.01em;
 			}
 			:global(.dark) .toc a:hover {
-				color: #fff;
-				border-left-color: #555;
+				color: #e4e4e7;
+				border-left-color: #52525b;
+			}
+			:global(.dark) .toc a:focus-visible {
+				outline: 2px solid #7dd3fc;
+				outline-offset: 2px;
 			}
 			.toc a.active {
 				color: #333;
@@ -239,8 +259,8 @@ const currentUrl = Astro.url;
 				font-weight: 500;
 			}
 			:global(.dark) .toc a.active {
-				color: #fff;
-				border-left-color: #fff;
+				color: #e4e4e7;
+				border-left-color: #e4e4e7;
 			}
 			.share-buttons {
 				display: flex;
@@ -252,7 +272,7 @@ const currentUrl = Astro.url;
 				border-bottom: 1px solid #eee;
 			}
 			:global(.dark) .share-buttons {
-				border-color: #333;
+				border-color: #3f3f46;
 			}
 			.share-btn {
 				display: inline-flex;
@@ -277,7 +297,11 @@ const currentUrl = Astro.url;
 				border-top: 1px solid #eee;
 			}
 			:global(.dark) .comments {
-				border-color: #333;
+				border-color: #3f3f46;
+			}
+			:global(.dark) .share-btn:focus-visible {
+				outline: 2px solid #fff;
+				outline-offset: 2px;
 			}
 		</style>
 	</head>

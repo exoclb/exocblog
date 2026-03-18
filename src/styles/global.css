@@ -11,13 +11,13 @@ html {
 }
 
 :root.dark {
-	--bg: #0d1117;
-	--text: #c9d1d9;
-	--text-muted: #8b949e;
-	--link: #58a6ff;
-	--link-hover: #79c0ff;
-	--border: #30363d;
-	--code-bg: #161b22;
+	--bg: #121418;
+	--text: #e4e4e7;
+	--text-muted: #a1a1aa;
+	--link: #7dd3fc;
+	--link-hover: #a5f3fc;
+	--border: #3f3f46;
+	--code-bg: #1c1c22;
 }
 
 body {
@@ -32,8 +32,10 @@ body {
 }
 
 .dark body {
-	background: #0d1117;
-	color: #c9d1d9;
+	background: #121418;
+	color: #e4e4e7;
+	font-weight: 450;
+	letter-spacing: 0.01em;
 }
 main {
 	width: 720px;
@@ -55,7 +57,7 @@ a {
 	text-underline-offset: 3px;
 }
 .dark a {
-	text-decoration-color: #484f58;
+	text-decoration-color: #71717a;
 }
 a:hover {
 	color: var(--text, #000);
@@ -73,19 +75,20 @@ code {
 	font-size: 0.9em;
 }
 .dark code {
-	background: #161b22;
-	color: #c9d1d9;
+	background: #1c1c22;
+	color: #e4e4e7;
+	font-weight: 500;
 }
 pre {
 	padding: 1em;
-	background: #161b22;
+	background: #1c1c22;
 	border-radius: 8px;
 	overflow-x: auto;
-	border: 1px solid #30363d;
+	border: 1px solid #3f3f46;
 }
 pre code {
 	background: none;
-	color: #eee;
+	color: #e4e4e7;
 }
 blockquote {
 	border-left: 3px solid var(--text, #333);

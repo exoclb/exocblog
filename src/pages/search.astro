@@ -99,9 +99,17 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				border-color: #333;
 			}
 			:global(.dark) #search-input {
-				border-color: #333;
-				background: #1a1a1a;
-				color: #eee;
+				border-color: #3f3f46;
+				background: #1c1c22;
+				color: #e4e4e7;
+				font-weight: 450;
+			}
+			:global(.dark) #search-input:focus {
+				border-color: #7dd3fc;
+				box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.2);
+			}
+			:global(.dark) #search-input::placeholder {
+				color: #71717a;
 			}
 			ul {
 				list-style: none;
@@ -110,6 +118,9 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 			li {
 				padding: 1rem 0;
 				border-bottom: 1px solid #eee;
+			}
+			:global(.dark) li {
+				border-bottom-color: #3f3f46;
 			}
 			li:last-child {
 				border-bottom: none;
@@ -122,7 +133,12 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				margin: 0 0 0.25rem 0;
 			}
 			:global(.dark) .title {
-				color: #eee;
+				color: #e4e4e7;
+				font-weight: 500;
+			}
+			:global(.dark) .title:focus-visible {
+				outline: 2px solid #7dd3fc;
+				outline-offset: 2px;
 			}
 			a:hover .title {
 				color: #000;
@@ -158,15 +174,17 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				text-decoration: none;
 			}
 			:global(.dark) .tag {
-				background: #333;
-				color: #aaa;
-			}
-			.tag:hover {
-				background: #333;
-				color: #fff;
+				background: #27272a;
+				color: #d4d4d8;
+				font-weight: 450;
 			}
 			:global(.dark) .tag:hover {
-				background: #555;
+				background: #3f3f46;
+				color: #e4e4e7;
+			}
+			:global(.dark) .tag:focus-visible {
+				outline: 2px solid #7dd3fc;
+				outline-offset: 2px;
 			}
 		</style>
 	</head>

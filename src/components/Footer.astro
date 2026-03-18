@@ -21,8 +21,28 @@ const today = new Date();
 		margin-top: 3rem;
 	}
 	:global(.dark) footer {
-		border-top-color: #333;
-		color: #888;
+		border-top-color: #3f3f46;
+		color: #a1a1aa;
+	}
+	.social-links a {
+		color: #666;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	.social-links a:hover {
+		color: #000;
+	}
+	:global(.dark) .social-links a {
+		color: #a1a1aa;
+		font-weight: 450;
+	}
+	:global(.dark) .social-links a:hover {
+		color: #e4e4e7;
+	}
+	:global(.dark) .social-links a:focus-visible {
+		outline: 2px solid #7dd3fc;
+		outline-offset: 2px;
+		border-radius: 2px;
 	}
 	.social-links {
 		display: flex;

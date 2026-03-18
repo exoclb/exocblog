@@ -28,19 +28,25 @@ const posts = (await getCollection('blog')).sort(
 				border-radius: 8px;
 				background: #fff;
 				color: #333;
-				transition: border-color 0.2s;
+				transition: border-color 0.2s, box-shadow 0.2s;
 			}
 			.search-input:focus {
 				outline: none;
 				border-color: #666;
+				box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 			}
 			:global(.dark) .search-input {
-				background: #161b22;
-				border-color: #30363d;
-				color: #c9d1d9;
+				background: #1c1c22;
+				border-color: #3f3f46;
+				color: #e4e4e7;
+				font-weight: 450;
 			}
 			:global(.dark) .search-input:focus {
-				border-color: #8b949e;
+				border-color: #7dd3fc;
+				box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.2);
+			}
+			:global(.dark) .search-input::placeholder {
+				color: #71717a;
 			}
 			ul {
 				list-style: none;
@@ -50,6 +56,9 @@ const posts = (await getCollection('blog')).sort(
 			li {
 				padding: 1rem 0;
 				border-bottom: 1px solid #eee;
+			}
+			:global(.dark) li {
+				border-bottom-color: #3f3f46;
 			}
 			li:last-child {
 				border-bottom: none;
@@ -62,11 +71,19 @@ const posts = (await getCollection('blog')).sort(
 				font-size: 1.25rem;
 				color: #333;
 				margin: 0 0 0.25rem 0;
+				font-weight: 500;
+			}
+			:global(.dark) .title {
+				color: #e4e4e7;
 			}
 			.date {
 				color: #888;
 				font-size: 0.85rem;
 				margin: 0;
+				letter-spacing: 0.01em;
+			}
+			:global(.dark) .date {
+				color: #a1a1aa;
 			}
 			a:hover .title {
 				color: #000;
@@ -87,10 +104,20 @@ const posts = (await getCollection('blog')).sort(
 				border-radius: 999px;
 				font-size: 0.75rem;
 				color: #555;
+				font-weight: 450;
 			}
 			:global(.dark) .tag {
-				background: #333;
-				color: #aaa;
+				background: #27272a;
+				color: #d4d4d8;
+			}
+			:global(.dark) .description {
+				color: #a1a1aa;
+			}
+			:global(.dark) a {
+				color: #e4e4e7;
+			}
+			:global(.dark) a:hover .title {
+				color: #fff;
 			}
 		</style>
 	</head>
