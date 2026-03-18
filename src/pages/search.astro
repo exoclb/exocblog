@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import SectionHeading from '../components/SectionHeading.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
@@ -46,8 +47,11 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				container.innerHTML = results.map(post => `
 					<li>
 						<a href="/blog/${post.slug}/">
-							<h3 class="title">${post.title}</h3>
-							<p class="date">${new Date(post.pubDate).toLocaleDateString()}</p>
+							<div class="post-left">
+								<span class="dot"></span>
+								<span class="title">${post.title}</span>
+							</div>
+							<span class="date">${new Date(post.pubDate).toLocaleDateString()}</span>
 							<p class="description">${post.description}</p>
 						</a>
 					</li>
@@ -89,19 +93,21 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				width: 100%;
 				padding: 0.75rem 1rem;
 				font-size: 1rem;
-				border: 2px solid #eee;
+				border: 1px solid var(--border);
 				border-radius: 8px;
-				background: transparent;
-				color: inherit;
+				background: var(--surface);
+				color: var(--text-primary);
+				transition: border-color 0.2s, box-shadow 0.2s;
 			}
 			#search-input:focus {
 				outline: none;
-				border-color: #333;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 3px rgba(124, 106, 247, 0.15);
 			}
 			:global(.dark) #search-input {
-				border-color: #3f3f46;
 				background: #1c1c22;
-				color: #e4e4e7;
+				border-color: #3f3f46;
+				color: #f2f0e8;
 				font-weight: 450;
 			}
 			:global(.dark) #search-input:focus {
@@ -114,51 +120,66 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 			ul {
 				list-style: none;
 				padding: 0;
+				margin: 0;
 			}
 			li {
-				padding: 1rem 0;
-				border-bottom: 1px solid #eee;
+				padding: 0.75rem 0;
+				border-bottom: 0.5px solid var(--border);
 			}
 			:global(.dark) li {
-				border-bottom-color: #3f3f46;
+				border-bottom-color: #2e2e2e;
 			}
 			li:last-child {
 				border-bottom: none;
 			}
 			a {
 				text-decoration: none;
+				display: block;
+				padding: 4px 0;
+				transition: padding-left 0.2s ease;
+			}
+			a:hover {
+				padding-left: 8px;
+			}
+			.post-left {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 4px;
+			}
+			.dot {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--accent);
+				flex-shrink: 0;
 			}
 			.title {
-				color: #333;
-				margin: 0 0 0.25rem 0;
-			}
-			:global(.dark) .title {
-				color: #e4e4e7;
+				color: var(--text-primary);
+				font-size: 14px;
 				font-weight: 500;
 			}
-			:global(.dark) .title:focus-visible {
-				outline: 2px solid #7dd3fc;
-				outline-offset: 2px;
+			:global(.dark) .title {
+				color: #f2f0e8;
 			}
 			a:hover .title {
-				color: #000;
+				color: var(--accent);
 			}
 			.date {
-				color: #888;
-				font-size: 0.85rem;
-				margin: 0;
+				color: var(--text-muted);
+				font-size: 12px;
+				letter-spacing: 0.01em;
 			}
 			.description {
-				color: #666;
+				color: var(--text-secondary);
 				margin: 0.25rem 0 0 0;
-				font-size: 0.95rem;
+				font-size: 0.9rem;
+			}
+			:global(.dark) .description {
+				color: #a1a1aa;
 			}
 			.tags-section {
 				margin-top: 2rem;
-			}
-			.tags-section h2 {
-				font-size: 1.25rem;
-				margin-bottom: 1rem;
 			}
 			.all-tags {
 				display: flex;
@@ -166,21 +187,25 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 				gap: 0.5rem;
 			}
 			.tag {
-				background: #eee;
-				padding: 0.5rem 1rem;
+				background: var(--accent-subtle);
+				padding: 0.4rem 0.8rem;
 				border-radius: 999px;
-				font-size: 0.9rem;
-				color: #555;
+				font-size: 0.85rem;
+				color: var(--accent);
 				text-decoration: none;
+				font-weight: 450;
+				transition: background-color 0.2s;
+			}
+			.tag:hover {
+				background: var(--border);
 			}
 			:global(.dark) .tag {
-				background: #27272a;
-				color: #d4d4d8;
-				font-weight: 450;
+				background: #1e1a3a;
+				color: #a78bfa;
 			}
 			:global(.dark) .tag:hover {
-				background: #3f3f46;
-				color: #e4e4e7;
+				background: #2e2a4a;
+				color: #c4b5fd;
 			}
 			:global(.dark) .tag:focus-visible {
 				outline: 2px solid #7dd3fc;
@@ -191,7 +216,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 	<body>
 		<Header />
 		<main>
-			<h1>Search</h1>
+			<SectionHeading text="Search" />
 			<div class="search-box">
 				<input type="text" id="search-input" placeholder="Search posts..." />
 			</div>
@@ -201,10 +226,13 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 					{posts.slice(0, 5).map((post) => (
 						<li>
 							<a href={`/blog/${post.id}/`}>
-								<h3 class="title">{post.data.title}</h3>
-								<p class="date">
+								<div class="post-left">
+									<span class="dot"></span>
+									<span class="title">{post.data.title}</span>
+								</div>
+								<span class="date">
 									<FormattedDate date={post.data.pubDate} />
-								</p>
+								</span>
 								<p class="description">{post.data.description}</p>
 							</a>
 						</li>
@@ -214,7 +242,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))];
 
 			{allTags.length > 0 && (
 				<div class="tags-section">
-					<h2>Browse by Tags</h2>
+					<SectionHeading text="Browse by Tags" />
 					<div class="all-tags">
 						{allTags.map((tag) => (
 							<a href={`/tags/${tag}`} class="tag">#{tag}</a>
